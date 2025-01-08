@@ -33,8 +33,15 @@ builder.Services.AddSingleton<IEmailSender, EmailSender>();
 // Register the QrCodeService
 builder.Services.AddScoped<QrCodeService>();
 
-// Explicitly configure listening URLs for development
-builder.WebHost.UseUrls("http://localhost:5179", "https://localhost:7200");
+// Check the environment and configure Kestrel accordingly
+if (builder.Environment.IsProduction())
+{
+     builder.WebHost.UseUrls("http://0.0.0.0:5000");
+}
+else
+{
+     builder.WebHost.UseUrls("http://localhost:5179", "https://localhost:7200");
+}
 
 var app = builder.Build();
 
@@ -52,7 +59,11 @@ else
      app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsProduction())
+{
+     app.UseHttpsRedirection();
+}
+
 app.UseStaticFiles();
 app.UseRouting();
 
