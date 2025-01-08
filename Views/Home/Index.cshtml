@@ -1,0 +1,69 @@
+﻿@model ETicketApp.Models.HomeViewModel
+
+@{
+     ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+     <h1 class="display-4">Welcome</h1>
+</div>
+
+<!-- Display Events -->
+<h3>Upcoming Events</h3>
+<table class="table">
+     <thead>
+          <tr>
+               <th>Event Name</th>
+               <th>Location</th>
+               <th>Event Date</th>
+               <th>Ticket Price</th>
+               <th>Actions</th>
+          </tr>
+     </thead>
+     <tbody>
+          @foreach (var item in Model.Events)
+          {
+               <tr>
+                    <td>@item.EventName</td>
+                    <td>@item.Location</td>
+                    <td>@item.EventDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@item.TicketPrice</td>
+                    <td>
+                         <a asp-action="EventDetails" asp-route-id="@item.EventId" class="btn btn-info">Details</a>
+
+                         @if (!User.IsInRole("Admin"))
+                         {
+                              <a asp-action="BuyTicket" asp-route-eventId="@item.EventId" class="btn btn-primary">Buy</a>
+                         }
+                    </td>
+               </tr>
+          }
+     </tbody>
+</table>
+
+<!-- Display Tickets -->
+<h3>Your Tickets</h3>
+<table class="table">
+     <thead>
+          <tr>
+               <th>Event Name</th>
+               <th>Purchase Date</th>
+               <th>Status</th>
+               <th>Actions</th>
+          </tr>
+     </thead>
+     <tbody>
+          @foreach (var item in Model.Tickets)
+          {
+               <tr>
+                    <td>@item.Event?.EventName</td>
+                    <td>@item.PurchaseDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Status</td>
+                    <td>
+                         <a asp-action="TicketDetails" asp-route-id="@item.TicketId" class="btn btn-info">Details</a>
+                         <a asp-action="Delete" asp-route-id="@item.TicketId" class="btn btn-danger">Delete</a>
+                    </td>
+               </tr>
+          }
+     </tbody>
+</table>

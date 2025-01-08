@@ -1,0 +1,54 @@
+﻿@{
+     ViewData["Title"] = "Ticket Validation";
+}
+
+<h1>Ticket Validation</h1>
+
+<!-- QR Code scanner UI here -->
+<button id="scanQRCode">Scan QR Code</button>
+
+<div id="ticketStatus"></div>
+
+@section Scripts {
+     <script src="https://unpkg.com/jsqr"></script>
+     <script>
+          const scanButton = document.getElementById("scanQRCode");
+
+          scanButton.addEventListener("click", function () {
+              // Trigger the QR scanner here (you can use a QR scanning library)
+              // After scanning, the `decodedText` will be the QR code data
+
+              const decodedText = "TicketId:12345,EventId:67890,PurchaseDate:2024-12-27";  // Sample data
+
+              // Send the decoded QR code data to the server for validation
+              fetch('/Tickets/ValidateTicket', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(parseQRCodeData(decodedText))
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      document.getElementById("ticketStatus").innerHTML = "Ticket validated successfully!";
+                  } else {
+                      document.getElementById("ticketStatus").innerHTML = `Validation failed: ${data.message}`;
+                  }
+              })
+              .catch(error => console.error('Error:', error));
+          });
+
+          function parseQRCodeData(decodedText) {
+              const params = decodedText.split(",");
+              const ticketData = {};
+
+              params.forEach(param => {
+                  const [key, value] = param.split(":");
+                  ticketData[key] = value;
+              });
+
+              return ticketData;
+          }
+     </script>
+}

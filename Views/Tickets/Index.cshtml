@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ETicketApp.Models.Ticket>
+
+<h1>Tickets</h1>
+
+<a asp-action="Create" class="btn btn-primary" id="createTicketLink">Create New Ticket</a>
+<br />
+<br />
+
+<table class="table">
+     <thead>
+          <tr>
+               <th>Event Name</th>
+               <th>Purchase Date</th>
+               <th>QR Code</th>
+               <th>Status</th>
+               <th>Actions</th>
+          </tr>
+     </thead>
+     <tbody>
+          @foreach (var item in Model)
+          {
+               <tr>
+                    <td>@item.Event?.EventName</td>
+                    <td>@item.PurchaseDate.ToString("dd/MM/yyyy")</td>
+                    <td>
+                         @if (!string.IsNullOrEmpty(item.QRCodeImage))
+                         {
+                              <img src="@item.QRCodeImage" alt="QR Code" style="width: 100px; height: 100px;" />
+                         }
+                    </td>
+                    <td>@item.Status</td>
+                    <td>
+                         @if (User.IsInRole("Admin"))
+                         {
+                              <a asp-action="Edit" asp-route-id="@item.TicketId" class="btn btn-warning">Edit</a>
+                              <a asp-action="Delete" asp-route-id="@item.TicketId" class="btn btn-danger">Delete</a>
+                              <a asp-action="Details" asp-route-id="@item.TicketId" class="btn btn-info">Details</a>
+                         }
+                         else
+                         {
+                              <span>Only admins can edit or delete</span>
+                         }
+                    </td>
+               </tr>
+          }
+     </tbody>
+</table>
+
+@section Scripts {
+     <script>
+          // Check if the user is not an Admin
+          if (!@User.IsInRole("Admin")) {
+              document.getElementById("createTicketLink").style.display = "none";
+          }
+     </script>
+}

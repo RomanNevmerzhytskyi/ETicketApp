@@ -1,0 +1,13 @@
+﻿@model ETicketApp.Models.Event
+
+@{
+     ViewData["Title"] = "Event Details";
+}
+
+<h1>@Model.EventName</h1>
+
+<p><strong>Location:</strong> @Model.Location</p>
+<p><strong>Event Date:</strong> @Model.EventDate.ToString("dd/MM/yyyy HH:mm")</p>
+<p><strong>Ticket Price:</strong> @Model.TicketPrice</p>
+
+<a href="@Url.Action("Index", "Home")" class="btn btn-primary">Back to Events</a>

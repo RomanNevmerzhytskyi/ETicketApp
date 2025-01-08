@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "QR Code Generator";
+}
+
+<h2>QR Code Generator</h2>
+
+<form asp-action="GenerateQRCode" method="post">
+    <div>
+        <label for="qrText">Enter text to generate QR Code:</label>
+        <input type="text" id="qrText" name="qrText" required />
+    </div>
+    <div>
+        <button type="submit">Generate QR Code</button>
+    </div>
+</form>
+
+@if (ViewBag.QRCodeImage != null)
+{
+    <div>
+        <h3>Generated QR Code:</h3>
+        <img src="data:image/png;base64,@ViewBag.QRCodeImage" alt="Generated QR Code" />
+    </div>
+}

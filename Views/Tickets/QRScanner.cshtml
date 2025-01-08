@@ -1,0 +1,91 @@
+﻿@{
+     ViewData["Title"] = "QR Code Scanner";
+}
+
+<h1>Scan Your Ticket QR Code</h1>
+
+<!-- Video element to show camera feed -->
+<video id="video" width="300" height="300" autoplay></video>
+
+<div id="result"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+
+<script>
+     const videoElement = document.getElementById('video');
+     const resultElement = document.getElementById('result');
+
+     // Request access to the camera
+     navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+         .then(stream => {
+             videoElement.srcObject = stream;
+             videoElement.setAttribute('playsinline', true); // Important for iOS
+
+             // Wait until the video metadata (width/height) is available before starting the scan
+             videoElement.onloadedmetadata = () => {
+                 requestAnimationFrame(scanQRCode);
+             };
+         })
+         .catch(err => console.error("Error accessing camera:", err));
+
+     function scanQRCode() {
+         // Capture the current frame of the video
+         const canvas = document.createElement('canvas');
+         canvas.width = videoElement.videoWidth;
+         canvas.height = videoElement.videoHeight;
+         const ctx = canvas.getContext('2d');
+
+         // Check if video dimensions are valid
+         if (canvas.width === 0 || canvas.height === 0) {
+             console.error("Video dimensions are not valid");
+             return;
+         }
+
+         ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+         // Attempt to decode the QR code
+         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+         const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+         if (code) {
+             // QR Code decoded successfully, send data to backend for validation
+             resultElement.innerText = 'QR Code Data: ' + code.data;
+             validateTicket(code.data);  // Send decoded data to server for validation
+         } else {
+             // If no QR code detected, keep scanning
+             requestAnimationFrame(scanQRCode);
+         }
+     }
+
+     function validateTicket(qrData) {
+         const ticketData = parseQRCodeData(qrData);
+         fetch('/Tickets/ValidateTicket', {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json'
+             },
+             body: JSON.stringify(ticketData)
+         })
+         .then(response => response.json())
+         .then(data => {
+             if (data.success) {
+                 alert("Ticket validated successfully!");
+             } else {
+                 alert("Ticket validation failed: " + data.message);
+             }
+         })
+         .catch(error => console.error('Error validating ticket:', error));
+     }
+
+     function parseQRCodeData(decodedText) {
+         const params = decodedText.split(",");
+         const ticketData = {};
+
+         params.forEach(param => {
+             const [key, value] = param.split(":");
+             ticketData[key] = value;
+         });
+
+         return ticketData;
+     }
+</script>

@@ -1,0 +1,32 @@
+﻿@model ETicketApp.Models.Ticket
+
+<h2>Ticket Details</h2>
+
+<div>
+     <strong>Event Name:</strong> @Model.Event.EventName
+</div>
+<div>
+     <strong>Purchase Date:</strong> @Model.PurchaseDate.ToString("dd/MM/yyyy")
+</div>
+<div>
+     <strong>Status:</strong> @Model.Status
+</div>
+
+@if (!string.IsNullOrEmpty(Model.QRCodeImage))
+{
+     <div>
+          <strong>QR Code:</strong>
+          <!-- Display QR Code Image -->
+          <img src="@Model.QRCodeImage" alt="QR Code" style="width:150px;height:150px;" />
+     </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.QrText))
+{
+     <div>
+          <strong>QR Code Text:</strong>
+          <p>@Model.QrText</p>
+     </div>
+}
+
+<a href="@Url.Action("Index", "Home")" class="btn btn-primary">Back to Home</a>

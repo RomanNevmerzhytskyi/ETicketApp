@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ETicketApp.Models.Event>
+
+@{
+     ViewData["Title"] = "Events";
+}
+
+<h1>Events</h1>
+
+<table class="table">
+     <thead>
+          <tr>
+               <th>
+                    @Html.DisplayNameFor(model => model.EventName)
+               </th>
+               <th>
+                    @Html.DisplayNameFor(model => model.Location)
+               </th>
+               <th>
+                    @Html.DisplayNameFor(model => model.EventDate)
+               </th>
+               <th>
+                    @Html.DisplayNameFor(model => model.TicketPrice)
+               </th>
+               <th></th>
+          </tr>
+     </thead>
+     <tbody>
+          @foreach (var item in Model)
+          {
+               <tr>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.EventName)
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.EventDate, "{0:dd.MM.yyyy HH:mm}")
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.TicketPrice)
+                    </td>
+                    <td>
+                         @if (User.IsInRole("Admin"))
+                         {
+                              <a asp-action="Edit" asp-route-id="@item.EventId" class="btn btn-warning">Edit</a>
+                              <a asp-action="Details" asp-route-id="@item.EventId" class="btn btn-info">Details</a>
+                              <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-danger">Delete</a>
+                         }
+                         else
+                         {
+                              <span>Only admins can edit or delete</span>
+                         }
+                    </td>
+               </tr>
+          }
+     </tbody>
+</table>
+
+@if (User.IsInRole("Admin"))
+{
+     <div>
+          <a asp-action="Create" class="btn btn-primary">Create New</a>
+     </div>
+}
