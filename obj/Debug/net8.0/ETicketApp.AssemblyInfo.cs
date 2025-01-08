@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ETicketApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a6d3c7939d60fc92d8bc5110826968238090d35")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+370d6a963f8af889d822b0d29a9401e7ed40b1ae")]
 [assembly: System.Reflection.AssemblyProductAttribute("ETicketApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ETicketApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
