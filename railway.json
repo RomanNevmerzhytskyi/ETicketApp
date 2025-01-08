@@ -1,8 +1,6 @@
 {
      "build": {
-          "builder": "NIXPACKS"
+          "baseImage": "mcr.microsoft.com/dotnet/sdk:8.0"
      },
-     "deploy": {
-          "command": "dotnet ETicketApp.dll"
-     }
+     "start": "./out/ETicketApp"
 }
