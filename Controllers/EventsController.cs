@@ -51,17 +51,27 @@ namespace ETicketApp.Controllers
           [ValidateAntiForgeryToken]
           public async Task<IActionResult> Create([Bind("EventName,Location,EventDate,TicketPrice")] Event eventObj)
           {
-               if (ModelState.IsValid)
+               if (!ModelState.IsValid)
                {
-                    if (eventObj.EventDate == default(DateTime))
+                    return View(eventObj);
+               }
+
+               try
+               {
+                    if (eventObj.EventDate == default)
                     {
-                         eventObj.EventDate = DateTime.Now; // Set default if not provided
+                         eventObj.EventDate = DateTime.UtcNow; // Use UTC time for consistency
                     }
+
                     _context.Add(eventObj);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                }
-               return View(eventObj);
+               catch (Exception ex)
+               {
+                    ModelState.AddModelError(string.Empty, $"An error occurred while creating the event: {ex.Message}");
+                    return View(eventObj);
+               }
           }
 
           // GET: Events/Edit/5

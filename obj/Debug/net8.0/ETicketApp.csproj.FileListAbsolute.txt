@@ -323,3 +323,6 @@ C:\Users\nevmr\source\repos\ETicketApp\ETicketApp\obj\Debug\net8.0\ETicketApp.ge
 C:\Users\nevmr\source\repos\ETicketApp\ETicketApp\obj\Debug\net8.0\ref\ETicketApp.dll
 C:\Users\nevmr\source\repos\ETicketApp\ETicketApp\bin\Debug\net8.0\Npgsql.dll
 C:\Users\nevmr\source\repos\ETicketApp\ETicketApp\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\nevmr\source\repos\ETicketApp\ETicketApp\obj\Debug\net8.0\ETicketApp.sourcelink.json
+C:\Users\nevmr\source\repos\ETicketApp\ETicketApp\bin\Debug\net8.0\railway.json
+C:\Users\nevmr\source\repos\ETicketApp\ETicketApp\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
