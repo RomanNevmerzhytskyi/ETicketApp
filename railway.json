@@ -1,5 +1,8 @@
 {
      "build": {
           "builder": "NIXPACKS"
+     },
+     "deploy": {
+          "command": "dotnet ETicketApp.dll"
      }
 }
