@@ -57,8 +57,8 @@ namespace ETicketApp.Migrations
                 {
                     EventId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EventName = table.Column<string>(type: "text", nullable: false),
-                    Location = table.Column<string>(type: "text", nullable: false),
+                    EventName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Location = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     TicketPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     EventDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EventDuration = table.Column<int>(type: "integer", nullable: false)

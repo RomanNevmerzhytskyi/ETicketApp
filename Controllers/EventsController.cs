@@ -1,13 +1,14 @@
 ﻿using ETicketApp.Models;
-using Microsoft.AspNetCore.Authorization;  // Add this for Authorization
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ETicketApp.Controllers
 {
-     [Authorize(Roles = "Admin")]  // Ensure that only admins can access these actions
+     [Authorize(Roles = "Admin")]
      public class EventsController : Controller
      {
           private readonly TicketingContext _context;
@@ -49,29 +50,34 @@ namespace ETicketApp.Controllers
           // POST: Events/Create
           [HttpPost]
           [ValidateAntiForgeryToken]
-          public async Task<IActionResult> Create([Bind("EventName,Location,EventDate,TicketPrice")] Event eventObj)
+          public async Task<IActionResult> Create([Bind("EventName,Location,EventDate,TicketPrice,EventDuration")] Event eventObj)
           {
-               if (!ModelState.IsValid)
+               if (ModelState.IsValid)
                {
-                    return View(eventObj);
-               }
-
-               try
-               {
-                    if (eventObj.EventDate == default)
+                    try
                     {
-                         eventObj.EventDate = DateTime.UtcNow; // Use UTC time for consistency
-                    }
+                         if (eventObj.EventDate == default)
+                         {
+                              eventObj.EventDate = DateTime.UtcNow;  // Use UTC time for consistency
+                         }
 
-                    _context.Add(eventObj);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                         if (eventObj.EventDuration <= 0)
+                         {
+                              ModelState.AddModelError(nameof(eventObj.EventDuration), "Event duration must be a positive number.");
+                              return View(eventObj);
+                         }
+
+                         _context.Add(eventObj);
+                         await _context.SaveChangesAsync();
+                         return RedirectToAction(nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+                         ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                    }
                }
-               catch (Exception ex)
-               {
-                    ModelState.AddModelError(string.Empty, $"An error occurred while creating the event: {ex.Message}");
-                    return View(eventObj);
-               }
+
+               return View(eventObj);
           }
 
           // GET: Events/Edit/5
@@ -87,13 +93,14 @@ namespace ETicketApp.Controllers
                {
                     return NotFound();
                }
+
                return View(eventObj);
           }
 
           // POST: Events/Edit/5
           [HttpPost]
           [ValidateAntiForgeryToken]
-          public async Task<IActionResult> Edit(int id, [Bind("EventId,EventName,Location,EventDate,TicketPrice")] Event eventObj)
+          public async Task<IActionResult> Edit(int id, [Bind("EventId,EventName,Location,EventDate,TicketPrice,EventDuration")] Event eventObj)
           {
                if (id != eventObj.EventId)
                {
@@ -104,8 +111,15 @@ namespace ETicketApp.Controllers
                {
                     try
                     {
+                         if (eventObj.EventDuration <= 0)
+                         {
+                              ModelState.AddModelError(nameof(eventObj.EventDuration), "Event duration must be a positive number.");
+                              return View(eventObj);
+                         }
+
                          _context.Update(eventObj);
                          await _context.SaveChangesAsync();
+                         return RedirectToAction(nameof(Index));
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -118,8 +132,8 @@ namespace ETicketApp.Controllers
                               throw;
                          }
                     }
-                    return RedirectToAction(nameof(Index));
                }
+
                return View(eventObj);
           }
 
@@ -151,6 +165,7 @@ namespace ETicketApp.Controllers
                     _context.Events.Remove(eventObj);
                     await _context.SaveChangesAsync();
                }
+
                return RedirectToAction(nameof(Index));
           }
 

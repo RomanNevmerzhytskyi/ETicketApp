@@ -38,11 +38,13 @@ namespace ETicketApp.Migrations
 
                     b.Property<string>("EventName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<decimal>("TicketPrice")
                         .HasColumnType("decimal(18,2)");

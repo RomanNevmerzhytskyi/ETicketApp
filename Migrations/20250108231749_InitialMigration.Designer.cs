@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ETicketApp.Migrations
 {
     [DbContext(typeof(TicketingContext))]
-    [Migration("20250108230111_UpdateEventModel")]
-    partial class UpdateEventModel
+    [Migration("20250108231749_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,11 +41,13 @@ namespace ETicketApp.Migrations
 
                     b.Property<string>("EventName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<decimal>("TicketPrice")
                         .HasColumnType("decimal(18,2)");
